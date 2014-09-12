@@ -1,3 +1,15 @@
 html, body {
   margin: 20px;
 }
+
+table {
+  width: 80%;
+}
+
+table:last-child {
+  width: 40%;
+}
+
+th {
+  text-align: left;
+}
