@@ -8,9 +8,11 @@ var ProgressEventTarget = Ember.Mixin.create(Ember.PromiseProxyMixin, {
   isTimedOut: false,
   isLoadEnded: false,
 
-  promise: Ember.computed.readOnly('deferred.promise'),
+
   deferred: Ember.computed(function() {
-    return Ember.RSVP.defer();
+    var deferred = Ember.RSVP.defer();
+    this.set('promise', deferred.promise);
+    return deferred;
   }).readOnly(),
   target: Ember.required(),
   _setupProgressEventListeners: Ember.observer(function() {
@@ -42,12 +44,17 @@ var ProgressEventTarget = Ember.Mixin.create(Ember.PromiseProxyMixin, {
       object.set('isLoadEnded', true);
     };
     target.onprogress = function(event) {
-      object.set('progress', ProgressEvent.create({event: event}));
+      object.set('progress', Progress.create({
+        target: object,
+        event: event,
+        at: new Date()
+      }));
     };
   }).on('init')
 });
 
-var ProgressEvent = Ember.Object.extend({
+var Progress = Ember.Object.extend({
+  target: null,
   event: null,
   lengthComputable: Ember.computed.readOnly('event.lengthComputable'),
   loaded: Ember.computed.readOnly('event.loaded'),
@@ -58,6 +65,22 @@ var ProgressEvent = Ember.Object.extend({
     } else {
       return NaN;
     }
+  }),
+  percentage: Ember.computed('ratio', function() {
+    var ratio = this.get('ratio');
+    if (!!ratio) {
+      return Math.round(ratio * 100);
+    } else {
+      return NaN;
+    }
+  }),
+  averageSpeed: Ember.computed('loaded', 'totalTime', function() {
+    var durationMillis = this.get('totalTime');
+    var durationSeconds = Math.round(durationMillis / 1000)
+    return this.get('loaded') / durationSeconds;
+  }),
+  totalTime: Ember.computed('target.loadStartedAt', 'at', function() {
+    return this.get('at').getTime() - this.get('target.loadStartedAt').getTime();
   })
 });
 

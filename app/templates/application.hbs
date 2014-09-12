@@ -1,6 +1,33 @@
-<h2 id='title'>Welcome to Ember.js</h2>
-
-{{xhr.state.name}} {{xhr.upload.progress.ratio}}
+<h2 id='title'>Choose file for reactive XHR!</h2>
 
 {{input type="file" change=uploadFile}}
 <button {{action "abort"}}>Abort</button>
+
+<h3> XHR </h3>
+<table>
+  <tr><th>State</th><th>isAborted</th><th>isErrored</th><th>isLoaded</th><th>isLoadStarted</th><th>isTimedOut</th><th>isLoadEnded</th><th>isPending</th><th>isSettled</th><th>isFulfilled</th><th>isRejected</th></tr>
+  <tr>
+    <td>{{xhr.state.value}}: {{xhr.state.name}}</td>
+    <td>{{input type="checkbox" checked=xhr.isAborted disabled=true}}</td>
+    <td>{{input type="checkbox" checked=xhr.isErrored disabled=true}}</td>
+    <td>{{input type="checkbox" checked=xhr.isLoaded disabled=true}}</td>
+    <td>{{input type="checkbox" checked=xhr.isLoadStarted disabled=true}}</td>
+    <td>{{input type="checkbox" checked=xhr.isTimedOut}}</td>
+    <td>{{input type="checkbox" checked=xhr.isLoadEnded disabled=true}}</td>
+    <td>{{input type="checkbox" checked=xhr.isPending disabled=true}}</td>
+    <td>{{input type="checkbox" checked=xhr.isSettled disabled=true}}</td>
+    <td>{{input type="checkbox" checked=xhr.isFulfilled disabled=true}}</td>
+    <td>{{input type="checkbox" checked=xhr.isRejected disabled=true}}</td>
+  </tr>
+</table>
+<h3> XHR.upload </h3>
+
+<table>
+  <tr><th>Percentage</th><th>Ratio</th><th>Total Time (ms)</th><th>Avg Speed B/s</th></tr>
+  <tr>
+    <td>{{xhr.upload.progress.percentage}}</td>
+    <td>{{xhr.upload.progress.ratio}}</td>
+    <td>{{xhr.upload.progress.totalTime}}</td>
+    <td>{{xhr.upload.progress.averageSpeed}}</td>
+  </tr>
+</table>
