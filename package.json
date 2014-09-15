@@ -27,5 +27,9 @@
     "express": "^4.1.1",
     "glob": "^3.2.9",
     "originate": "0.1.5"
+  },
+  "dependencies": {
+    "broccoli-es6-module-transpiler": "^0.2.3",
+    "broccoli-merge-trees": "^0.1.4"
   }
 }

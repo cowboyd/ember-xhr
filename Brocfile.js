@@ -1,7 +1,9 @@
 /* global require, module */
 
 var EmberApp = require('ember-cli/lib/broccoli/ember-app');
-
+var compileModules = require('broccoli-es6-module-transpiler');
+var mergeTrees = require('broccoli-merge-trees');
+var modules = compileModules('app/models', {formatter: 'bundle', output: 'ember-xhr.js'});
 var app = new EmberApp();
 
 // Use `app.import` to add additional libraries to the generated
@@ -17,4 +19,6 @@ var app = new EmberApp();
 // please specify an object with the list of modules as keys
 // along with the exports of each module as its value.
 
-module.exports = app.toTree();
+//module.exports = app.toTree();
+
+module.exports = mergeTrees([modules, app.toTree()], {overwrite: true})
