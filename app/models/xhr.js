@@ -14,7 +14,9 @@ var ProgressEventTarget = Ember.Mixin.create(Ember.PromiseProxyMixin, {
     this.set('promise', deferred.promise);
     return deferred;
   }).readOnly(),
+
   target: Ember.required(),
+
   _setupProgressEventListeners: Ember.observer(function() {
     var object = this;
     var target = this.get('target');
@@ -76,7 +78,7 @@ var Progress = Ember.Object.extend({
   }),
   averageSpeed: Ember.computed('loaded', 'totalTime', function() {
     var durationMillis = this.get('totalTime');
-    var durationSeconds = Math.round(durationMillis / 1000)
+    var durationSeconds = Math.round(durationMillis / 1000);
     return this.get('loaded') / durationSeconds;
   }),
   totalTime: Ember.computed('target.loadStartedAt', 'at', function() {
@@ -84,20 +86,26 @@ var Progress = Ember.Object.extend({
   })
 });
 
-var XHR = Ember.Object.extend(ProgressEventTarget, {
-  open: function(method, url) {
-    this.get('target').open(method, url);
-  },
-  send: function() {
+function delegateToXHR(method) {
+  return function() {
     var target = this.get('target');
-    target.send.apply(target, arguments);
-  },
-  abort: function() {
-    this.get('target').abort();
-  },
+    return target[method].apply(target, arguments);
+  };
+}
+
+var XHR = Ember.Object.extend(ProgressEventTarget, {
   target: Ember.computed(function() {
     return new XMLHttpRequest();
   }).readOnly(),
+
+  open: delegateToXHR('open'),
+  send: delegateToXHR('send'),
+  abort: delegateToXHR('abort'),
+  setRequestHeader: delegateToXHR('setRequestHeader'),
+  getResponseHeader: delegateToXHR('getResponseHeader'),
+  overrideMimeType: delegateToXHR('overrideMimeType'),
+
+  statusBinding: Ember.Binding.oneWay('state.status'),
   readyStateBinding: Ember.Binding.oneWay('state.readyState'),
   responseTypeBinding: Ember.Binding.oneWay('state.responseType'),
   responseBinding: Ember.Binding.oneWay('state.response'),
@@ -116,7 +124,7 @@ var XHR = Ember.Object.extend(ProgressEventTarget, {
     });
   }),
   listenForReadyStateChanges: Ember.observer(function() {
-    var object = this
+    var object = this;
     var target = this.get('target');
     target.onreadystatechange = function() {
       var State = READY_STATES[target.readyState];
@@ -129,6 +137,7 @@ var XHR = Ember.Object.extend(ProgressEventTarget, {
 var Upload = Ember.Object.extend(ProgressEventTarget);
 
 var ReadyState = Ember.Object.extend({
+  status: Ember.computed.readOnly('request.status'),
   readyState: Ember.computed.readOnly('request.readyState'),
   responseType: Ember.computed.readOnly('request.responseType'),
   response: Ember.computed.readOnly('request.response'),
@@ -167,5 +176,7 @@ var DoneState = ReadyState.extend({
 });
 
 var READY_STATES = [UnsentState, OpenedState, HeadersReceivedState, LoadingState, DoneState];
+
+Ember.XHR = XHR;
 
 export default XHR;
