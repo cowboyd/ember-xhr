@@ -20,9 +20,6 @@ export default Ember.Controller.extend({
       data.append('file', file, file.name);
       xhr.open('POST', 'http://posttestserver.com/post.php');
       xhr.send(data);
-      xhr.then(function() {
-        console.log('done!')
-      })
     }
   }
 });
