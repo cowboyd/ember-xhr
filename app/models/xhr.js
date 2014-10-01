@@ -99,8 +99,12 @@ var XHR = Ember.Object.extend(ProgressEventTarget, {
   }).readOnly(),
 
   open: delegateToXHR('open'),
-  send: delegateToXHR('send'),
   abort: delegateToXHR('abort'),
+  send: function() {
+    //materialize uploads
+    this.get('upload');
+    return delegateToXHR("send").apply(this, arguments);
+  },
   setRequestHeader: delegateToXHR('setRequestHeader'),
   getResponseHeader: delegateToXHR('getResponseHeader'),
   overrideMimeType: delegateToXHR('overrideMimeType'),
