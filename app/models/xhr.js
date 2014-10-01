@@ -27,7 +27,7 @@ var ProgressEventTarget = Ember.Mixin.create(Ember.PromiseProxyMixin, {
     };
     target.onerror = function() {
       object.set('isErrored', true);
-      deferred.reject('aborted');
+      deferred.reject('error');
     };
     target.onload = function() {
       object.set('isLoaded', true);
