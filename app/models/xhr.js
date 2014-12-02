@@ -109,9 +109,11 @@ var XHR = Ember.Object.extend(ProgressEventTarget, {
   getResponseHeader: delegateToXHR('getResponseHeader'),
   overrideMimeType: delegateToXHR('overrideMimeType'),
 
+
   statusBinding: Ember.Binding.oneWay('state.status'),
   readyStateBinding: Ember.Binding.oneWay('state.readyState'),
-  responseTypeBinding: Ember.Binding.oneWay('state.responseType'),
+
+  responseType: Ember.computed.alias('target.responseType'),
   responseBinding: Ember.Binding.oneWay('state.response'),
   responseTextBinding: Ember.Binding.oneWay('state.responseText'),
   responseXMLBinding: Ember.Binding.oneWay('state.responseXML'),
@@ -143,10 +145,23 @@ var Upload = Ember.Object.extend(ProgressEventTarget);
 var ReadyState = Ember.Object.extend({
   status: Ember.computed.readOnly('request.status'),
   readyState: Ember.computed.readOnly('request.readyState'),
-  responseType: Ember.computed.readOnly('request.responseType'),
   response: Ember.computed.readOnly('request.response'),
-  responseText: Ember.computed.readOnly('request.responseText'),
-  responseXML: Ember.computed.readOnly('request.responseXML')
+  responseText: Ember.computed(function() {
+    var responseType = this.get('request.responseType');
+    if (Ember.isEmpty(responseType) || responseType == 'text') {
+      return this.get('request.responseText');
+    } else {
+      return this.undefined;
+    }
+  }).readOnly(),
+  responseXML: Ember.computed(function() {
+    var responseType = this.get('request.responseType');
+    if (Ember.isEmpty(responseType) || responseType == 'document') {
+      return this.get('request.responseXML');
+    } else {
+      return this.undefined;
+    }
+  }).readOnly()
 });
 
 var UnsentState = ReadyState.extend({

@@ -15,6 +15,7 @@ export default Ember.Controller.extend({
     },
     upload: function(file) {
       var xhr = this.get('xhr');
+      xhr.set('responseType', 'blob');
 
       var data = new FormData();
       data.append('file', file, file.name);
