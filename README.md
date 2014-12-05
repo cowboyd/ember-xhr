@@ -28,8 +28,18 @@ download.
 
 There are progress properties that correspond to the state of the
 upload and the download, and that react as that state changes. The
-download progress properties are directly on the XHR, and the upload
-progress properties are on an `upload` property
+download progress properties are the `progress`
+property. E.g. `progress.total`, while the upload progress is on the
+`upload.progress` property. E.g. `upload.progress.total`
+
+These reactive properties are:
+
+
+* **total**: the total number of bytes that will be sent in this transfer.
+* **loaded**: how many bytes of the total have been transferred thus far.
+* **percentage**: what percentage of the total bytes have been transferred thus far.
+* **totalTime**: time in milliseconds that this transfer has been in progress.
+* **averageSpeed**: Over the coures of the transfer, the average speed in bytes per second.
 
 Because Ember.XHR radiates all information about its progress,
 building UIs to track it are a snap.
