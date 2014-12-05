@@ -1,3 +1,5 @@
+import Ember from 'ember';
+
 var ProgressEventTarget = Ember.Mixin.create(Ember.PromiseProxyMixin, {
   isAborted: false,
   isErrored: false,
