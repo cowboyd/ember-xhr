@@ -31,6 +31,9 @@ upload and the download, and that react as that state changes. The
 download progress properties are directly on the XHR, and the upload
 progress properties are on an `upload` property
 
+Because Ember.XHR radiates all information about its progress,
+building UIs to track it are a snap.
+
 
 ## Example
 
@@ -47,12 +50,16 @@ The xhr can just be dropped into a template.
 
 ```hbs
 {{xhr.readyState}}
-Bytes Uploaded: {{xhr.upload.loaded}}
-Total Time: {{xhr.upload.progress.totalTime}}
-Avg. Speed (bytes/second): {{xhr.upload.progress.averageSpeed}}
-Ratio Uploaded: {{xhr.upload.progress.ratio}} {{!=> .45}}
-{{xhr.upload.progress.percentage}}% {{!=> 45% }}
+Bytes Uploaded: {{xhr.upload.progress.loaded}}
+Bytes Downloaded: {{xhr.progress.loaded}}
+Avg. Upload Speed (bytes/second): {{xhr.upload.progress.averageSpeed}}
+Avg. Download Speed (bytes/second): {{xhr.progress.averageSpeed}}
+Percentage Uploaded: {{xhr.upload.progress.percentage}} {{!=> .45}}
+Percentage Downloaded: {{xhr.progress.percentage}}
 ```
+
+It's not just for templates though... binding the upload percentage to
+the width of a progress bar is another simple application.
 
 ## And that's a promise!
 
