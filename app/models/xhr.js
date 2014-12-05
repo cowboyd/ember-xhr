@@ -1,5 +1,3 @@
-import Ember from 'ember';
-
 var ProgressEventTarget = Ember.Mixin.create(Ember.PromiseProxyMixin, {
   isAborted: false,
   isErrored: false,
@@ -110,8 +108,8 @@ var XHR = Ember.Object.extend(ProgressEventTarget, {
   overrideMimeType: delegateToXHR('overrideMimeType'),
 
 
-  statusBinding: Ember.Binding.oneWay('state.status'),
-  readyStateBinding: Ember.Binding.oneWay('state.readyState'),
+  status: Ember.computed.readOnly('state.status'),
+  readyState: Ember.computed.readOnly('state.readyState'),
 
   responseType: Ember.computed.alias('target.responseType'),
   responseBinding: Ember.Binding.oneWay('state.response'),
@@ -148,7 +146,7 @@ var ReadyState = Ember.Object.extend({
   response: Ember.computed.readOnly('request.response'),
   responseText: Ember.computed(function() {
     var responseType = this.get('request.responseType');
-    if (Ember.isEmpty(responseType) || responseType == 'text') {
+    if (Ember.isEmpty(responseType) || responseType === 'text') {
       return this.get('request.responseText');
     } else {
       return this.undefined;
@@ -156,7 +154,7 @@ var ReadyState = Ember.Object.extend({
   }).readOnly(),
   responseXML: Ember.computed(function() {
     var responseType = this.get('request.responseType');
-    if (Ember.isEmpty(responseType) || responseType == 'document') {
+    if (Ember.isEmpty(responseType) || responseType === 'document') {
       return this.get('request.responseXML');
     } else {
       return this.undefined;
