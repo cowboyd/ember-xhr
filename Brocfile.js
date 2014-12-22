@@ -1,10 +1,12 @@
+/* jshint node: true */
 /* global require, module */
 
-var EmberApp = require('ember-cli/lib/broccoli/ember-app');
+var EmberAddon = require('ember-cli/lib/broccoli/ember-addon');
 var compileModules = require('broccoli-es6-module-transpiler');
 var mergeTrees = require('broccoli-merge-trees');
-var modules = compileModules('app/models', {formatter: 'bundle', output: 'ember-xhr.js'});
-var app = new EmberApp();
+var transpiler = require('broccoli-es6-module-transpiler/node_modules/es6-module-transpiler');
+
+var app = new EmberAddon();
 
 // Use `app.import` to add additional libraries to the generated
 // output files.
@@ -19,6 +21,15 @@ var app = new EmberApp();
 // please specify an object with the list of modules as keys
 // along with the exports of each module as its value.
 
-//module.exports = app.toTree();
 
-module.exports = mergeTrees([modules, app.toTree()], {overwrite: true})
+// Support a globalized build
+function ShimResolver() {}
+ShimResolver.prototype = new transpiler.FileResolver(['vendor/']);
+
+var transpiledLib = compileModules('addon', {
+  formatter: 'bundle',
+  output   : 'ember-xhr.js',
+  resolvers: [transpiler.FileResolver, ShimResolver]
+});
+
+module.exports = mergeTrees([app.toTree(), transpiledLib], {overwrite: true});

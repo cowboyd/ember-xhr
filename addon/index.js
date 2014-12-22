@@ -95,7 +95,7 @@ function delegateToXHR(method) {
 
 var XHR = Ember.Object.extend(ProgressEventTarget, {
   target: Ember.computed(function() {
-    return new XMLHttpRequest();
+    return new window.XMLHttpRequest();
   }).readOnly(),
 
   open: delegateToXHR('open'),
