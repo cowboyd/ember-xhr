@@ -44,12 +44,43 @@ These reactive properties are:
 Because Ember.XHR radiates all information about its progress,
 building UIs to track it are a snap.
 
+## Installation
+
+Ember XHR can be used via ember-cli, or from a global build. The choice is yours, but to use the global build, you'll have to jump through a few more hoops.
+
+### Ember CLI
+
+Using it with ember-cli is a snap:
+
+    npm install --save ember-xhr
+
+Then, anywhere in your app:
+
+```js
+import XHR from 'ember-xhr';
+```
+
+### Global Build
+
+```
+git clone git://github.com/cowboyd/ember-xhr.git
+cd ember-xhr
+npm install
+ember build
+```
+
+This will build `dist/ember-xhr.js` and `dist/ember-xhr.js.map` which you can place into your `vendor/` directory or wherever it is you keep your javascript files. This will define `Ember.XHR`, so anywhere in your app, you can say:
+
+```js
+var XHR = Ember.XHR;
+```
+
 
 ## Example
 
 ```js
 var file = getDraggedFile();
-var xhr = Ember.XHR.create();
+var xhr = XHR.create();
 xhr.open('PUT', '/path/to/some/blob', true);
 xhr.setRequestHeader('Content-Type', 'application/octet-stream');
 xhr.send(file);
