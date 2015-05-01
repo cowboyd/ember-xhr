@@ -1,3 +1,31 @@
-<h2 id='title'>Welcome to Ember.js</h2>
+<h2 id='title'>Ember XHR</h2>
 
-{{outlet}}
+<p>
+  Select any number of files to send to <a href="http://www.posttestserver.com/">http://www.posttestserver.com/</a>
+</p>
+<p>
+  Don't post anything private!
+</p>
+
+<input type="file" value="Choose a file to upload" multiple="true"/>
+
+<hr/>
+
+<table>
+  <tr>
+    <th style="width: 150px">File Name</th>
+    <th style="width: 150px">Bytes Loaded</th>
+    <th style="width: 2em;">Percentage</th>
+    <th style="width: 8em;">Avg Speed (B/s)</th>
+    <th style="width: 3m;">Total Time(ms)</th>
+  </tr>
+{{#each request in requests}}
+  <tr>
+    <td>{{request.file.name}}</td>
+    <td>{{request.upload.progress.loaded}}</td>
+    <td>{{request.upload.progress.percentage}}</td>
+    <td>{{request.upload.progress.averageSpeed}}</td>
+    <td>{{request.upload.progress.totalTime}}</td>
+  </tr>
+{{/each}}
+</table>
