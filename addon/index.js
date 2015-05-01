@@ -17,7 +17,8 @@ var ProgressEventTarget = Ember.Mixin.create(Ember.PromiseProxyMixin, {
 
   target: Ember.required(),
 
-  _setupProgressEventListeners: Ember.observer(function() {
+  init: function() {
+    this._super.apply(this, arguments);
     var object = this;
     var target = this.get('target');
     var deferred = this.get('deferred');
@@ -52,7 +53,7 @@ var ProgressEventTarget = Ember.Mixin.create(Ember.PromiseProxyMixin, {
         at: new Date()
       }));
     };
-  }).on('init')
+  }
 });
 
 var Progress = Ember.Object.extend({
@@ -129,14 +130,15 @@ var XHR = Ember.Object.extend(ProgressEventTarget, {
       request: this.get('request')
     });
   }),
-  listenForReadyStateChanges: Ember.observer(function() {
+  init: Ember.observer(function() {
+    this._super.apply(this, arguments);
     var object = this;
     var target = this.get('target');
     target.onreadystatechange = function() {
       var State = READY_STATES[target.readyState];
       object.set('state', State.create({request: target}));
     };
-  }).on('init')
+  })
 });
 
 
