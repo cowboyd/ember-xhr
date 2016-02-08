@@ -135,8 +135,10 @@ var XHR = Ember.Object.extend(ProgressEventTarget, {
     var object = this;
     var target = this.get('target');
     target.onreadystatechange = function() {
-      var State = READY_STATES[target.readyState];
-      object.set('state', State.create({request: target}));
+      if(target.readyState){
+        var State = READY_STATES[target.readyState];
+        object.set('state', State.create({request: target}));
+      }
     };
   })
 });
