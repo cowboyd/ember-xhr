@@ -15,7 +15,7 @@ var ProgressEventTarget = Ember.Mixin.create(Ember.PromiseProxyMixin, {
     return deferred;
   }).readOnly(),
 
-  target: Ember.required(),
+  target: null, //required
 
   init: function() {
     this._super.apply(this, arguments);
@@ -115,9 +115,9 @@ var XHR = Ember.Object.extend(ProgressEventTarget, {
   readyState: Ember.computed.readOnly('state.readyState'),
 
   responseType: Ember.computed.alias('target.responseType'),
-  responseBinding: Ember.Binding.oneWay('state.response'),
-  responseTextBinding: Ember.Binding.oneWay('state.responseText'),
-  responseXMLBinding: Ember.Binding.oneWay('state.responseXML'),
+  responseBinding: Ember.computed.oneWay('state.response'),
+  responseTextBinding: Ember.computed.oneWay('state.responseText'),
+  responseXMLBinding: Ember.computed.oneWay('state.responseXML'),
 
   timeout: Ember.computed.alias('target.timeout'),
   upload: Ember.computed(function() {
@@ -135,8 +135,10 @@ var XHR = Ember.Object.extend(ProgressEventTarget, {
     var object = this;
     var target = this.get('target');
     target.onreadystatechange = function() {
-      var State = READY_STATES[target.readyState];
-      object.set('state', State.create({request: target}));
+      if(target.readyState){
+        var State = READY_STATES[target.readyState];
+        object.set('state', State.create({request: target}));
+      }
     };
   })
 });
